@@ -4,7 +4,7 @@ servo1_180.attach(9);
 servo2_180.attach(10);
 pinMode(buttonPin, INPUT);
 }
-#hehehe
+//hehehe
 
 void loop() {
   // put your main code here, to run repeatedly:
