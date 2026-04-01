@@ -3,6 +3,7 @@ void setup() {
 servo1_180.attach(9);
 servo2_180.attach(10);
 pinMode(buttonPin, INPUT);
+  //lalalalallaaa
 }
 
 void loop() {
