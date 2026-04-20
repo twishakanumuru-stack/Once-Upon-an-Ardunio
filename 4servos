@@ -1,0 +1,90 @@
+#include <Servo.h>
+
+Servo myServo1;
+Servo myServo2;
+Servo myServo3;
+Servo myServo4;
+
+const int servoPin1 = 6; //first servo
+const int servoPin2 = 7; //second servo
+const int servoPin3 = 8; //third servo
+const int servoPin4 = 13; //fourth servo
+const int copperPin1 = 2; //first switch
+const int copperPin2 = 3; //second switch
+const int copperPin3 = 4; //third switch
+const int copperPin4 = 11; //fourth switch
+
+bool hasRun1 = false;
+bool hasRun2 = false;
+bool hasRun3 = false;
+bool hasRun4 = false;
+
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(copperPin1, INPUT_PULLUP);
+  pinMode(copperPin2, INPUT_PULLUP);
+  pinMode(copperPin3, INPUT_PULLUP);
+  pinMode(copperPin4, INPUT_PULLUP);
+
+  delay(2000);
+
+  myServo1.attach(servoPin1);
+  myServo1.write(90);
+  delay(500);
+  myServo1.detach();
+
+  myServo2.attach(servoPin2);
+  myServo2.write(90);
+  delay(500); 
+  myServo2.detach();
+
+  // Third servo starts at 0 so it can sweep the full 180 degrees when triggered
+  myServo3.attach(servoPin3);
+  myServo3.write(0);
+  delay(500);
+  myServo3.detach();
+
+  myServo4.attach(servoPin4);
+  myServo4.write(90);
+  delay(500);
+  myServo4.detach();
+}
+
+void triggerServo(Servo &servo, int pin, bool &hasRun, int sensorVal) {
+  if (sensorVal == LOW && !hasRun) {
+    hasRun = true;
+    servo.attach(pin);
+    servo.write(180);
+    delay(600);
+    servo.write(180); 
+    delay(200);
+    servo.detach();
+  }
+  if (sensorVal == HIGH) {
+    hasRun = false;
+  }
+}
+
+void loop() {
+  int sensorVal1 = digitalRead(copperPin1);
+  int sensorVal2 = digitalRead(copperPin2);
+  int sensorVal3 = digitalRead(copperPin3);
+  int sensorVal4 = digitalRead(copperPin4);
+
+  Serial.print("Sensor 1: ");
+  Serial.print(sensorVal1);
+  Serial.print("  Sensor 2: ");
+  Serial.print(sensorVal2);
+  Serial.print("  Sensor 3: ");
+  Serial.print(sensorVal3);
+  Serial.print("  Sensor 4: ");
+  Serial.println(sensorVal4);
+
+  triggerServo(myServo1, servoPin1, hasRun1, sensorVal1);
+  triggerServo(myServo2, servoPin2, hasRun2, sensorVal2);
+  triggerServo(myServo3, servoPin3, hasRun3, sensorVal3);
+  triggerServo(myServo4, servoPin4, hasRun4, sensorVal4);
+
+  delay(100);
+}
